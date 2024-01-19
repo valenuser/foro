@@ -8,11 +8,11 @@
                 <div class="data">
                         <div class="username">
                                 <i class="fa-solid fa-user"></i>
-                                <input type="text" placeholder="@usuario">
+                                <input type="text" placeholder="@usuario" v-model="username">
                         </div>
                         <div class="password">
                                 <i class="fa-solid fa-lock"></i>
-                                <input type="text" placeholder="Contraseña">
+                                <input type="text" placeholder="Contraseña" v-model="password">
                         </div>
                 </div>
                 <div class="button-space">
@@ -23,11 +23,75 @@
         </section>
 </template>
 <script>
+import Swal from 'sweetalert2'
+import { registered } from '../usersRegistered'
+import { user } from '@/users'
 export default{
         name:'LoginView',
+        data(){
+                return{
+                        username:'',
+                        password:''
+                }
+        },
+        mounted(){
+                user.pop()
+        },
         methods:{
                 login(){
-                        this.$router.push({name:'main'})
+                        if(this.username.length == 0 || this.password.length == 0){
+                                Swal.fire({
+                                        title: "Rellene correctamente el formulario.",
+                                        icon:'error',
+                                        showClass: {
+                                        popup: `
+                                                animate__animated
+                                                animate__fadeInUp
+                                                animate__faster
+                                        `
+                                        },
+                                        hideClass: {
+                                        popup: `
+                                                animate__animated
+                                                animate__fadeOutDown
+                                                animate__faster
+                                        `
+                                        }
+                                });
+
+                                this.password = ''
+                                this.username = ''
+                        }else{
+                                const userData = registered.find(data => data.name == this.username && data.password == this.password)
+                                if(typeof(userData) == "undefined"){
+                                        Swal.fire({
+                                                title: "Usuario no registrado.",
+                                                icon:'error',
+                                                showClass: {
+                                                popup: `
+                                                        animate__animated
+                                                        animate__fadeInUp
+                                                        animate__faster
+                                                `
+                                                },
+                                                hideClass: {
+                                                popup: `
+                                                        animate__animated
+                                                        animate__fadeOutDown
+                                                        animate__faster
+                                                `
+                                                }
+                                        });
+                                        
+                                        this.password = ''
+                                        this.username = ''
+                                }else{
+                                        user.push(userData)
+                                        this.password = ''
+                                        this.username = ''
+                                        this.$router.push({name:'main'})
+                                }
+                        }
                 }
         }
 }
@@ -36,7 +100,7 @@ export default{
 section
         width: 100%
         height: 100vh
-        background: blue
+        background: #35119D
         display: flex
         align-items: center
         flex-direction: column  
@@ -76,9 +140,10 @@ section
                 height: 30px
                 text-align: center
                 border: none
-                background: blue
+                background: #35119D
                 font-size: 15px
-                border-bottom: 1px solid white
+                font-weight: bold
+                border-bottom: 2px solid white
                 outline: none
                 &::placeholder
                         color: white

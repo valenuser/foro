@@ -14,7 +14,7 @@
 </template>
 <script>
 import NavMain from '../components/NavMain.vue'
-import { user } from '@/user';
+import { user } from '@/users';
 export default{
     components:{
         NavMain
@@ -30,7 +30,7 @@ export default{
 section
     width: 100%
     height: 100vh
-    background: blue
+    background: #35119D
     display: flex
     align-items: center
     flex-direction: column  

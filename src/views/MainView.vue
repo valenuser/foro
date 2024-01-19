@@ -33,7 +33,7 @@ export default{
 section
     width: 100%
     height: 100vh
-    background: blue
+    background: #35119D
     display: flex
     align-items: center
     flex-direction: column  

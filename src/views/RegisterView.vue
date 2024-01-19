@@ -5,12 +5,12 @@
             </router-link>
             <router-view></router-view>
             <div class="data">
-                <input type="text" placeholder="Nombre">
-                <input type="text" placeholder="Apellido">
-                <input type="text" placeholder="usuario">
-                <input type="password" placeholder="Contraseña">
-                <input type="text" placeholder="Foto de perfil">
-                <input type="text" placeholder="Descripción">
+                <input type="text" placeholder="Nombre" v-model="nombre">
+                <input type="text" placeholder="Apellido" v-model="apellido">
+                <input type="text" placeholder="usuario" v-model="username">
+                <input type="password" placeholder="Contraseña" v-model="password">
+                <input type="text" placeholder="Foto de perfil" v-model="picture">
+                <input type="text" placeholder="Descripción" v-model="description">
             </div>
             <div class="button-space">
                     <button @click="main">Crear cuenta</button>
@@ -18,10 +18,62 @@
     </section>
 </template>
 <script>
+import Swal from 'sweetalert2'
+import { user } from '@/users';
+import { registered } from '../usersRegistered'
 export default{
+    data(){
+        return{
+            nombre:'',
+            apellido:'',
+            username:'',
+            password:'',
+            picture:'',
+            description:''
+        }
+    },
     methods:{
         main(){
-            this.$router.push({name:'main'})
+            if(this.nombre.length == 0 ||this.apellido.length == 0 ||this.username.length == 0 ||this.password.length == 0 ||this.picture.length == 0 ||this.description.length == 0 ){
+                Swal.fire({
+                    title: "Rellene correctamente el formulario.",
+                    icon:'error',
+                    showClass: {
+                    popup: `
+                            animate__animated
+                            animate__fadeInUp
+                            animate__faster
+                    `
+                    },
+                     hideClass: {
+                    popup: `
+                            animate__animated
+                            animate__fadeOutDown
+                            animate__faster
+                    `
+                    }
+                });                   
+                this.password = ''
+                this.username = ''
+            }else{
+                user.push({
+                    name:this.username,
+                    password:this.password,
+                    nameLong:this.nombre,
+                    lastName:this.apellido,
+                    descripcion:this.description,
+                    picture:this.picture
+                })
+                registered.push({
+                    name:this.username,
+                    password:this.password,
+                    nameLong:this.nombre,
+                    lastName:this.apellido,
+                    descripcion:this.description,
+                    picture:this.picture
+                })
+                this.$router.push({name:'main'})
+            }
         }
     }
 }
@@ -30,7 +82,7 @@ export default{
 section
     width: 100%
     height: 100vh
-    background: blue
+    background: #35119D
     display: flex
     align-items: center
     flex-direction: column  
@@ -55,9 +107,10 @@ section
             height: 120px
             text-align: center
             border: none
-            background: blue
+            background: #35119D
             font-size: 15px
-            border-bottom: 1px solid white
+            font-weight: bold
+            border-bottom: 2px solid white
             outline: none
             &::placeholder
                     color: white
